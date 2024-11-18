@@ -1,0 +1,39 @@
+[package]
+name = "fastexcel"
+version = "0.11.6"
+edition = "2021"
+license = "MIT"
+homepage = "https://github.com/ToucanToco/fastexcel"
+repository = "https://github.com/ToucanToco/fastexcel.git"
+readme = "README.md"
+include = [
+    "/pyproject.toml",
+    "/README.md",
+    "/LICENSE",
+    "/Makefile",
+    "/src",
+    "/python/fastexcel",
+    "!__pycache__",
+    "!*.pyc",
+    "!*.so",
+]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+name = "fastexcel"
+crate-type = ["cdylib"]
+
+[dependencies]
+
+[dev-dependencies]
+pretty_assertions = "1.4.1"
+rstest = { version = "0.23.0", default-features = false }
+
+# NOTE: This is a hack to bypass pyo3 limitations when testing:
+# https://pyo3.rs/v0.20.3/faq.html#i-cant-run-cargo-test-or-i-cant-build-in-a-cargo-workspace-im-having-linker-issues-like-symbol-not-found-or-undefined-reference-to-_pyexc_systemerror
+[features]
+extension-module = ["pyo3/extension-module"]
+default = ["extension-module"]
+# feature for tests only. This makes Python::with_gil auto-initialize Python
+# interpreters, which allows us to instantiate Python objects in tests
+tests = ["pyo3/auto-initialize"]
